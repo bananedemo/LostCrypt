@@ -1,0 +1,29 @@
+---
+Default: &default
+  productName: LostCryptDev
+  companyName: BanaNEDev
+  bundleVersion: "0.1"
+  scenes:
+    - Assets/Scenes/Main.unity
+Development:
+  <<: *default
+  developmentBuild: true
+  iOS:
+    identifier: com.bananedev.LostCryptDev
+    outputPath: Output/LostCryptDev.xcode
+    automaticSigning: true
+    developerTeamId: XXXXXXXXXX
+  android:
+    identifier: com.bananedev.LostCryptDev
+    outputPath: Output/LostCryptDev.apk
+Release:
+  <<: *default
+  developmentBuild: false
+  iOS:
+    identifier: com.bananedev.LostCrypt
+    outputPath: Output/LostCrypt.xcode
+    automaticSigning: true
+    developerTeamId: XXXXXXXXXX
+  android:
+    identifier: com.bananedev.LostCrypt
+    outputPath: Output/LostCrypt.apk
