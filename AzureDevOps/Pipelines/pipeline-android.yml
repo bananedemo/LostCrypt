@@ -1,0 +1,21 @@
+trigger: none
+
+parameters:
+  - name: config
+    type: string
+    default: Development
+    values: [Development, Release]
+
+variables:
+  - template: variables.yml
+
+jobs:
+  - job: AndroidUnityBuild
+    pool:
+      name: UnityWindowsPool1
+    steps:
+      - template: steps-unity.yml
+        parameters:
+          target: Android
+          config: ${{parameters.config}}
+          publish: android

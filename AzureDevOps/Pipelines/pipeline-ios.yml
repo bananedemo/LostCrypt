@@ -1,0 +1,21 @@
+trigger: none
+
+parameters:
+  - name: config
+    type: string
+    default: Development
+    values: [Development, Release]
+
+variables:
+  - template: variables.yml
+
+jobs:
+  - job: iOSUnityBuild
+    pool:
+      name: UnityWindowsPool1
+    steps:
+      - template: steps-unity.yml
+        parameters:
+          target: iOS
+          config: ${{parameters.config}}
+          publish: xcode

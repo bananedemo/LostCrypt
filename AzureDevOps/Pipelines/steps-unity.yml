@@ -1,0 +1,32 @@
+parameters:
+  - name: target
+    type: string
+    values: [Android, iOS]
+  - name: config
+    type: string
+    values: [Development, Release]
+  - name: publish
+    type: string
+
+steps:
+  - task: DownloadSecureFile@1
+    name: downloadUnityTunnelKey
+    inputs:
+      secureFile: $(unityTunnelKeySecureFile)
+  - powershell: >
+      .\AzureDevOps\Scripts\UnityTunnel.ps1
+      -Server $(unityTunnelServer)
+      -Port 58765
+      -Connect 127.0.0.1:8080
+      -KeyPath $(downloadUnityTunnelKey.secureFilePath)
+  - powershell: >
+      .\AzureDevOps\Scripts\UnityInstall.ps1
+      -ProjectPath .
+      -BuildTarget ${{parameters.target}}
+  - powershell: >
+      .\AzureDevOps\Scripts\UnityBuild.ps1
+      -ProjectPath .
+      -BuildTarget ${{parameters.target}}
+      -BuildConfig ${{parameters.config}}
+  - publish: Output
+    artifact: ${{parameters.publish}}
