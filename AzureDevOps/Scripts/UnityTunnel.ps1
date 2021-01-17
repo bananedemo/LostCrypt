@@ -9,8 +9,17 @@ param(
 Set-StrictMode -Version 3
 $ErrorActionPreference = 'Stop'
 
+$acl = Get-Acl -Path $KeyPath
+$acl.SetAccessRuleProtection($true, $false)
+$acl.Access | ForEach-Object { $acl.RemoveAccessRule($_) }
+$ace = New-Object System.Security.AccessControl.FileSystemAccessRule -ArgumentList $acl.Owner, 'Read', 'Allow'
+$acl.AddAccessRule($ace)
+Set-Acl -Path $KeyPath -AclObject $acl
+Get-Acl -Path $KeyPath | Format-List *
+
 $ArgumentList = @(
     $Server,
+    '-v',
     '-i', $KeyPath,
     '-L', "${Port}:${Connect}",
     '-o', 'ExitOnForwardFailure=yes',
