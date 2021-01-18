@@ -1,10 +1,6 @@
 steps:
-  - displayName: Initialize data disk
-    powershell: |
+  - powershell: |
+      $size = Get-PartitionSupportedSize -DriveLetter C
+      Resize-Partition -DriveLetter C -Size $size.SizeMax
       Get-Volume
-      Get-Disk |
-      Where PartitionStyle -eq 'Raw' |
-      Select-Object -First 1 |
-      Initialize-Disk -PartitionStyle MBR -PassThru |
-      New-Partition -DriveLetter F -UseMaximumSize |
-      Format-Volume -FileSystem NTFS -NewFileSystemLabel 'Data' -Confirm:$false
+    displayName: Extend OS disk

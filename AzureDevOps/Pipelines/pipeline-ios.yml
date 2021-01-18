@@ -14,6 +14,7 @@ jobs:
     pool:
       name: UnityWindowsPool1
     steps:
+      - template: steps-disk.yml
       - template: steps-unity.yml
         parameters:
           target: iOS
