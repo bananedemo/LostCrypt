@@ -76,7 +76,7 @@ namespace AppBuilder
                 PlayerSettings.companyName = config.companyName;
                 PlayerSettings.bundleVersion = config.bundleVersion;
                 PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, config.android.identifier);
-                PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, config.iOS.identifier);
+                PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.iOS, config.iOS.identifier);
                 PlayerSettings.iOS.appleEnableAutomaticSigning = config.iOS.automaticSigning;
                 PlayerSettings.iOS.appleDeveloperTeamID = config.iOS.developerTeamId;
                 var options = new BuildPlayerOptions
