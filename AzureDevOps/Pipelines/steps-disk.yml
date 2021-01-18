@@ -1,6 +1,6 @@
 steps:
   - powershell: |
       $size = Get-PartitionSupportedSize -DriveLetter C
-      Resize-Partition -DriveLetter C -Size $size.SizeMax
+      Resize-Partition -DriveLetter C -Size $size.SizeMax -ErrorAction SilentlyContinue
       Get-Volume
     displayName: Extend OS disk
