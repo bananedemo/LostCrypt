@@ -19,14 +19,18 @@ steps:
       -Port 58765
       -Connect 127.0.0.1:8080
       -KeyPath $(downloadUnityTunnelKey.secureFilePath)
+    displayName: Start Unity licensing tunnel
   - powershell: >
       .\AzureDevOps\Scripts\UnityInstall.ps1
       -ProjectPath .
       -BuildTarget ${{parameters.target}}
+    displayName: Install Unity editor
   - powershell: >
       .\AzureDevOps\Scripts\UnityBuild.ps1
       -ProjectPath .
       -BuildTarget ${{parameters.target}}
       -BuildConfig ${{parameters.config}}
+    displayName: Build Unity project
   - publish: Output
     artifact: ${{parameters.publish}}
+    displayName: Publish artifacts
