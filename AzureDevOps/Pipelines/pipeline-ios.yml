@@ -20,3 +20,12 @@ jobs:
           target: iOS
           config: ${{parameters.config}}
           publish: xcode
+  - job: iOSXcodeBuild
+    dependsOn: iOSUnityBuild
+    pool:
+      vmImage: macOS-latest
+    steps:
+      - template: steps-xcode.yml
+        parameters:
+          download: current
+          publish: ios

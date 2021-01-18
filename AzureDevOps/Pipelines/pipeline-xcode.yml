@@ -1,0 +1,20 @@
+trigger: none
+
+resources:
+  pipelines:
+    - pipeline: LostCryptExp
+      project: LostCryptExp
+      source: LostCrypt iOS
+
+variables:
+  - template: variables.yml
+
+jobs:
+  - job: iOSXcodeBuild
+    pool:
+      vmImage: macOS-latest
+    steps:
+      - template: steps-xcode.yml
+        parameters:
+          download: LostCryptExp
+          publish: ios

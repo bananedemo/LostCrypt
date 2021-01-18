@@ -1,0 +1,66 @@
+parameters:
+  - name: config
+    type: string
+    default: Release
+  - name: download
+    type: string
+  - name: publish
+    type: string
+
+steps:
+  - checkout: none
+  - download: ${{parameters.download}}
+    artifact: xcode
+  - bash: |
+      set -o pipefail
+      mv $(Pipeline.Workspace)/*/xcode/*.xcode xcode || true
+      mv $(Pipeline.Workspace)/xcode/*.xcode xcode || true
+      find xcode -name '*.sh' -print0 | xargs -0 chmod +x
+    displayName: Fix script permissions
+  - task: InstallAppleCertificate@2
+    name: InstallAppleCertificate
+    inputs:
+      certSecureFile: $(p12SecureFile)
+      certPwd: $(p12Pwd)
+  - task: InstallAppleProvisioningProfile@1
+    name: InstallAppleProvisioningProfile
+    inputs:
+      provProfileSecureFile: $(provSecureFile)
+  # We don't use Xcode@5 because of lacking support for Unity-iPhone.xcproject
+  # https://github.com/microsoft/azure-pipelines-tasks/issues/12263
+  # https://docs.unity3d.com/ja/2019.4/Manual/StructureOfXcodeProject.html
+  - bash: >
+      set -x &&
+      /usr/bin/xcodebuild
+      -sdk iphoneos
+      -configuration "${{parameters.config}}"
+      -workspace ./xcode/Unity-iPhone.xcodeproj/project.xcworkspace
+      -scheme Unity-iPhone
+      -archivePath ./export.xcarchive
+      archive
+      CODE_SIGN_STYLE=Manual
+      CODE_SIGN_IDENTITY="$(InstallAppleCertificate.signingIdentity)"
+      PROVISIONING_PROFILE_APP=$(InstallAppleProvisioningProfile.provisioningProfileUuid)
+    displayName: Run xcodebuild archive
+  - bash: |
+      set -x
+      appIdentifier=`/usr/libexec/PlistBuddy -c 'Print :ApplicationProperties:CFBundleIdentifier' ./export.xcarchive/Info.plist`
+      /usr/libexec/PlistBuddy exportOptions.plist <<EOF
+      Add :compileBitcode bool false
+      Add :provisioningProfiles dict
+      Add :provisioningProfiles:${appIdentifier} string $(InstallAppleProvisioningProfile.provisioningProfileUuid)
+      Save
+      EOF
+      echo
+      cat exportOptions.plist
+    displayName: Genearte exportOptions.plist
+  - bash: >
+      set -x &&
+      /usr/bin/xcodebuild
+      -exportArchive
+      -archivePath ./export.xcarchive
+      -exportPath ./export
+      -exportOptionsPlist ./exportOptions.plist
+    displayName: Run xcodebuild -exportArchive
+  - publish: export
+    artifact: ${{parameters.publish}}
