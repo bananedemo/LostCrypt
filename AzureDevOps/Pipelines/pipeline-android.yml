@@ -1,6 +1,9 @@
 trigger: none
 
 parameters:
+  - name: pool
+    type: string
+    default: UnityWindowsPool1
   - name: config
     type: string
     default: Development
@@ -12,7 +15,7 @@ variables:
 jobs:
   - job: AndroidUnityBuild
     pool:
-      name: UnityWindowsPool1
+      name: ${{parameters.pool}}
     steps:
       - checkout: self
         lfs: true
@@ -22,3 +25,8 @@ jobs:
           target: Android
           config: ${{parameters.config}}
           publish: android
+      - template: steps-appcenter.yml
+        parameters:
+          target: Android
+          config: ${{parameters.config}}
+          file: Output/*.apk

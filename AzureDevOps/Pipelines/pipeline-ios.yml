@@ -1,6 +1,9 @@
 trigger: none
 
 parameters:
+  - name: pool
+    type: string
+    default: UnityWindowsPool1
   - name: config
     type: string
     default: Development
@@ -12,7 +15,7 @@ variables:
 jobs:
   - job: iOSUnityBuild
     pool:
-      name: UnityWindowsPool1
+      name: ${{parameters.pool}}
     steps:
       - checkout: self
         lfs: true
@@ -31,3 +34,8 @@ jobs:
         parameters:
           download: current
           publish: ios
+      - template: steps-appcenter.yml
+        parameters:
+          target: iOS
+          config: ${{parameters.config}}
+          file: export/*.ipa

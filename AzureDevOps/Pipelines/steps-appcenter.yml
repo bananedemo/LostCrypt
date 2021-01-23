@@ -1,0 +1,20 @@
+parameters:
+  - name: target
+    type: string
+    values: [Android, iOS]
+  - name: config
+    type: string
+    values: [Development, Release]
+  - name: file
+    type: string
+
+steps:
+  - task: AppCenterDistribute@3
+    inputs:
+      serverEndpoint: $(appcenterEndpoint)-${{parameters.target}}-${{parameters.config}}
+      appSlug: $(appcenterSlug)-${{parameters.target}}-${{parameters.config}}
+      appFile: ${{parameters.file}}
+      releaseNotesInput: |
+        LostCrypt ${{parameters.target}} ${{parameters.config}}
+        $(Build.BuildNumber)
+    displayName: Upload to App Center
