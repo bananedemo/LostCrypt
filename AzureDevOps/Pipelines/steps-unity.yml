@@ -19,6 +19,7 @@ steps:
       -Port 58765
       -Connect 127.0.0.1:8080
       -KeyPath $(downloadUnityTunnelKey.secureFilePath)
+      -UpdateConfig
     displayName: Start Unity licensing tunnel
   - powershell: >
       .\AzureDevOps\Scripts\UnityInstall.ps1
