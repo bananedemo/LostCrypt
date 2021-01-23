@@ -14,6 +14,8 @@ jobs:
     pool:
       vmImage: macOS-latest
     steps:
+      - checkout: self
+        lfs: true
       - template: steps-xcode.yml
         parameters:
           download: LostCryptExp

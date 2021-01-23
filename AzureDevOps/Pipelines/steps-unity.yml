@@ -9,8 +9,6 @@ parameters:
     type: string
 
 steps:
-  - checkout: self
-    lfs: true
   - task: DownloadSecureFile@1
     name: downloadUnityTunnelKey
     inputs:
