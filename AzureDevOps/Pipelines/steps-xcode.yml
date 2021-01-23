@@ -47,7 +47,7 @@ steps:
       set -x
       appIdentifier=`/usr/libexec/PlistBuddy -c 'Print :ApplicationProperties:CFBundleIdentifier' ./export.xcarchive/Info.plist`
       /usr/libexec/PlistBuddy exportOptions.plist <<EOF
-      Add :compileBitcode bool false
+      Add :compileBitcode bool true
       Add :provisioningProfiles dict
       Add :provisioningProfiles:${appIdentifier} string $(InstallAppleProvisioningProfile.provisioningProfileUuid)
       Save
