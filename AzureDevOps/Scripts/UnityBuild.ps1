@@ -14,7 +14,9 @@ param(
 
     [string]$EditorVersion,
 
-    [string]$EditorBasePath = "C:/Program Files/Unity/Hub/Editor"
+    [string]$EditorBasePath = "C:/Program Files/Unity/Hub/Editor",
+
+    [switch]$WaitForLicense = $false
 )
 
 Set-StrictMode -Version Latest
@@ -39,6 +41,23 @@ if ([string]::IsNullOrWhiteSpace($EditorVersion)) {
 $EditorPath = [io.path]::Combine($EditorBasePath, $EditorVersion, 'Editor/Unity.exe')
 if (!(Test-Path $EditorPath)) {
     throw "Unity editor not found: $EditorPath"
+}
+
+# Unity.Licensing.Client の場所
+$UnityLicensingClientPath = [io.path]::Combine($EditorBasePath, $EditorVersion, 'Editor/Data/Resources/Licensing/Client/Unity.Licensing.Client.exe')
+
+# フローティングライセンスのリースを待つ
+# Unity.Licensing.Client は常に終了コード 0 を返すので標準出力で判断するしかない
+if ($WaitForLicense -and (Test-Path $UnityLicensingClientPath)) {
+    for ($i = 1; ; $i++) {
+        Write-Host "Starting Unity.Licensing.Client (attempt $i)"
+        $a = & $UnityLicensingClientPath --acquire-floating
+        $a | Out-Host
+        if ($a -match '^License lease Created ') {
+            break
+        }
+        Start-Sleep -Seconds 30
+    }
 }
 
 # Unity Editor の引数

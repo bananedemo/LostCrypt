@@ -30,6 +30,7 @@ steps:
       -ProjectPath .
       -BuildTarget ${{parameters.target}}
       -BuildConfig ${{parameters.config}}
+      -WaitForLicense
     displayName: Build Unity project
   - publish: Output
     artifact: ${{parameters.publish}}
