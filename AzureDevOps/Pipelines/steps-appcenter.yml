@@ -13,6 +13,7 @@ steps:
       serverEndpoint: $(appcenterEndpoint)-${{parameters.target}}-${{parameters.config}}
       appSlug: $(appcenterSlug)-${{parameters.target}}-${{parameters.config}}
       appFile: ${{parameters.file}}
+      distributionGroupId: $(appcenterGroupId)
       releaseNotesInput: |
         LostCrypt ${{parameters.target}} ${{parameters.config}}
         $(Build.BuildNumber)
