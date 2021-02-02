@@ -1,2 +1,4 @@
 variables:
   - group: unity-build
+  - name: config
+    value: $[coalesce(variables.configOverride, 'Release')]

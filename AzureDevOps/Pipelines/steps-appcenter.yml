@@ -4,7 +4,6 @@ parameters:
     values: [Android, iOS]
   - name: config
     type: string
-    values: [Development, Release]
   - name: file
     type: string
 
