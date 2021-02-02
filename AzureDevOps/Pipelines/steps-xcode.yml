@@ -41,7 +41,7 @@ steps:
       CODE_SIGN_STYLE=Manual
       CODE_SIGN_IDENTITY="$(InstallAppleCertificate.signingIdentity)"
       PROVISIONING_PROFILE_APP=$(InstallAppleProvisioningProfile.provisioningProfileUuid)
-      DEVELOPMENT_TEAM=$(appleDevelopmentTeam)
+      DEVELOPMENT_TEAM=
     displayName: Run xcodebuild archive
   - bash: |
       set -x
