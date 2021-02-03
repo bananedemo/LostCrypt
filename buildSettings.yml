@@ -1,12 +1,12 @@
 ---
 Default: &default
-  productName: LostCryptDev
   companyName: BanaNEDev
   bundleVersion: "0.1"
   scenes:
     - Assets/Scenes/Main.unity
 Development:
   <<: *default
+  productName: Lost Crypt Dev
   developmentBuild: true
   iOS:
     identifier: com.bananedev.LostCryptDev
@@ -18,6 +18,7 @@ Development:
     outputPath: Output/LostCryptDev.apk
 Release:
   <<: *default
+  productName: Lost Crypt
   developmentBuild: false
   iOS:
     identifier: com.bananedev.LostCrypt
