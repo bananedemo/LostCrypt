@@ -26,6 +26,22 @@ steps:
       -BuildTarget ${{parameters.target}}
     displayName: Install Unity editor
   - powershell: >
+      Get-ChildItem -Path Assets,Packages,ProjectSettings -Recurse -Force -File |
+      Get-FileHash |
+      Sort-Object -Property Path |
+      Export-Csv -NoTypeInformation -Path checksum.csv
+    displayName: Generate cache checksum
+  - task: Cache@2
+    inputs:
+      key: |
+        "Library" | ${{parameters.target}} | ${{parameters.config}} | checksum.csv
+      restoreKeys: |
+        "Library" | ${{parameters.target}} | ${{parameters.config}}
+        "Library" | ${{parameters.target}}
+        "Library"
+      path: Library
+    displayName: Cache Library
+  - powershell: >
       .\AzureDevOps\Scripts\UnityBuild.ps1
       -ProjectPath .
       -BuildTarget ${{parameters.target}}
